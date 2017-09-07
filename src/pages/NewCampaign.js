@@ -15,11 +15,10 @@ import {
   DatePicker
 } from 'antd'
 
-const Option = Select.Option;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 
 const ContentContainer = styled(Content) `
   padding: 24px;
@@ -159,9 +158,7 @@ class NewCampaign extends Component {
               />
             </FormItem>
           </Form>
-          <div>
-            <Button type="primary">Apply</Button>˝
-          </div>
+          <Button type="primary">Apply</Button>
         </FormContainer>
       </ContentContainer>
     )
