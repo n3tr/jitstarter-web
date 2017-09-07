@@ -40,12 +40,12 @@ class App extends Component {
         <LocaleProvider locale={enUS}>
           <Layout className="layout">
             <AppHeader />
-            <PrivateRoute path="/" exact component={Browse} />
-            <Route exact path="/login" exact component={Login} />
+            
+            <Route exact path="/login" component={Login} />
             <Route exact path="/auth/:token" exact component={Auth} />
-            <Route path="/" exact component={Browse} />
-            <Route path="/newCampaign" exact component={NewCampaign} />
-            <Route path="/campaignDetail" exact component={CampaignDetail} />
+            <PrivateRoute path="/" exact component={Browse} />
+            <PrivateRoute path="/newCampaign" exact component={NewCampaign} />
+            <PrivateRoute path="/campaignDetail" exact component={CampaignDetail} />
 
             <Footer style={{ textAlign: 'center' }}>
               Jitstarter
