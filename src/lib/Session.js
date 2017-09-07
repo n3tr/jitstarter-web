@@ -1,20 +1,30 @@
 import Cookie from 'js-cookie'
 
 class Session {
-  constructor(accessToken) {
-    this.accessToken = accessToken || true
+  constructor() {
+    const token = localStorage.getItem('token')
+    const name = localStorage.getItem('name')
+    const id = localStorage.getItem('id')
+    this.token =  token
+    this.name = name
+    this.id = id
   }
 
   get isLoggedIn() {
-    return !!this.accessToken
+    return !!this.token
   }
 
-  login(accessToken) {
-    this.accessToken = accessToken
-    Cookie.set('__acT', accessToken)
+  login(token) {
+    this.token = token
+    localStorage.setItem('token', token)
+  }
+
+  setUser(id, name) {
+    this.id = id
+    this.name = name
+    localStorage.setItem('name', name)
+    localStorage.setItem('id', id)
   }
 }
 
-const accessToken = Cookie.get('__acT')
-
-export default new Session(accessToken)
+export default new Session()
