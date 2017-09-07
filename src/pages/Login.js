@@ -15,7 +15,7 @@ export default class Login extends React.Component {
   render() {
     return (
       <Container>
-        <a href={`https://jitstarter-server.herokuapp.com/auth/google?redirectUrl=${process.env.REACT_APP_HOST}`}>Login with Google Account</a>
+        <a href={`https://jitstarter-server.herokuapp.com/auth/google?redirectUrl=${process.env.REACT_APP_HOST}/auth`}>Login with Google Account</a>
       </Container>
     )
   }
