@@ -4,9 +4,10 @@ import { Layout } from 'antd'
 const { Content } = Layout
 
 const CampaignContainer = styled.div`
-  min-width: 300px;
+  min-width: 25%;
   flex: 1;
   padding: 8px;
+  max-width: 25%;
 `
 
 const CampaignInner = styled.div`
@@ -38,9 +39,19 @@ const CampaignImageDiv = styled.div`
   background: transparent url(${props => props.src})
 `
 
-
 const CardBody = styled.div`
-  padding: 4px 8px;
+  padding: 16px;
+`
+
+const CardTitle = styled.h4`
+font-size: 18px;
+margin: 0;
+padding: 0;
+`
+
+const CardBy = styled.p`
+margin: 0;
+padding: 0;
 `
 
 const CampaignItem = (props) => {
@@ -51,7 +62,8 @@ const CampaignItem = (props) => {
           <ImageAbs src={props.campaign.image} />
         </ImageContainer>
         <CardBody>
-          Test
+          <CardTitle>Test</CardTitle>
+          <CardBy>by someone</CardBy>
         </CardBody>
       </CampaignInner>
     </CampaignContainer>
@@ -65,7 +77,7 @@ export default class Browse extends React.Component {
         {Array.from({ length: 12 }).map((i, index) => {
           return <CampaignItem key={index} campaign={{
             image: index % 2 === 0 ? 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png' : 'https://ksr-ugc.imgix.net/assets/017/906/988/cb35b162a455cc137957a27550c24f09_original.jpg?crop=faces&w=560&h=315&fit=crop&v=1503731494&auto=format&q=92&s=a5e17f688fbb11a57281a837255660a9'
-          }}/>
+          }} />
         })}
       </Content>
     )
