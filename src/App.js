@@ -7,6 +7,7 @@ import {
 
 import Browse from './pages/Browse'
 import AppHeader from './components/AppHeader'
+import NewCampaign from './pages/NewCampaign'
 
 import { Layout, Menu } from 'antd';
 const { Header, Footer } = Layout;
@@ -19,6 +20,7 @@ class App extends Component {
         <Layout className="layout">
           <AppHeader />
           <Route path="/" exact component={Browse} />
+          <Route path="/newCampaign" exact component={NewCampaign} />
 
           <Footer style={{ textAlign: 'center' }}>
             Jitstarter
