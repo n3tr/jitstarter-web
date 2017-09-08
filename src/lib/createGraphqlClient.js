@@ -24,6 +24,7 @@ export default () => {
     applyAfterware({ response }, next) {
       if (response.status === 401) {
         Session.logout()
+        window.location.href = '/login'
       }
       next();
     }
