@@ -80,7 +80,7 @@ const CampaignItem = (props) => {
         </ImageContainer>
         <CardBody>
           <CardTitle>{campaign.name}</CardTitle>
-          <CardBy>by {campaign.creator.name}</CardBy>
+          <CardBy>by {campaign.creator ? campaign.creator.name : 'unknonwn'}</CardBy>
           <Progress percent={percent} strokeWidth={5} />
         </CardBody>
         </Link>

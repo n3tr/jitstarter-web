@@ -49,7 +49,8 @@ class NewCampaign extends Component {
     name: '',
     description: '',
     startDate: '',
-    endDate: ''
+    endDate: '',
+    phone: ''
   }
 
   constructor(props) {
@@ -65,7 +66,7 @@ class NewCampaign extends Component {
       previewVisible: true,
     });
   }
-  handleUploadChange = ({ fileList }) => { 
+  handleUploadChange = ({ fileList }) => {
     console.log('handleUploadChange', fileList)
     this.setState({ fileList })
   }
@@ -105,7 +106,7 @@ class NewCampaign extends Component {
     })
   }
 
-  handleDateChange = (value, dateString)  => {
+  handleDateChange = (value, dateString) => {
     const startDate = value[0]
     const endDate = value[1]
 
@@ -115,9 +116,15 @@ class NewCampaign extends Component {
     })
   }
 
+  handlePhoneChange = (event) => {
+    this.setState({
+      phone: event.target.value
+    })
+  }
+
   handleSubmit = () => {
     console.log(this.state)
-    const images = this.state.fileList.map( file => {
+    const images = this.state.fileList.map(file => {
       const response = file.response
       return response.url
     })
@@ -130,15 +137,16 @@ class NewCampaign extends Component {
     const isUnlimit = this.state.unlimitMaxReachValue
     const startDate = this.state.startDate.toISOString()
     const endDate = this.state.endDate.toISOString()
+    const promptPayMobile = this.state.phone
 
-    console.log({ 
+    console.log({
       name, description, goalType, minimumGoal, maximumGoal, isUnlimit, startDate, endDate, images
-     })
+    })
 
     this.props.mutate({
-      variables: { 
+      variables: {
         name, description, goalType, minimumGoal, maximumGoal, isUnlimit, startDate, endDate, images
-       }
+      }
     }).then((res) => {
       const id = res.data.createCampaign.id
       this.props.history.replace('/campaign/' + id)
@@ -148,7 +156,6 @@ class NewCampaign extends Component {
   }
 
   render() {
-
     const {
       previewVisible,
       previewImage,
@@ -178,14 +185,14 @@ class NewCampaign extends Component {
 
             </FormItem>
             <FormItem label="Your campaign Name">
-              <Input placeholder="Name..." 
-              onChange={this.handleNameChange}
-              value={this.state.name} />
+              <Input placeholder="Name..."
+                onChange={this.handleNameChange}
+                value={this.state.name} />
             </FormItem>
             <FormItem label="Describe what you’ll be creating.">
-              <TextArea rows={4} 
-              onChange={this.handleDetailChange}
-              value={this.state.description}/>
+              <TextArea rows={4}
+                onChange={this.handleDetailChange}
+                value={this.state.description} />
             </FormItem>
             <FormItem label="Promote images">
               <Upload
@@ -201,7 +208,17 @@ class NewCampaign extends Component {
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
               </Modal>
             </FormItem>
-            <FormItem label="Maximum amount to reach">
+            
+            <FormItem label="Minimum goal to reach">
+              <InputNumber
+                disabled={unlimitMinReachValue}
+                value={minReachValue}
+                min={0}
+                onChange={this.handleMinReachValue}
+              />
+            </FormItem>
+
+            <FormItem label="Maximum goal">
               <InputNumber
                 disabled={unlimitMaxReachValue}
                 value={maxReachValue}
@@ -210,24 +227,28 @@ class NewCampaign extends Component {
               />
               <Checkbox onChange={this.handdleUnlimitMaxReachValue}>Unlimit</Checkbox>
             </FormItem>
-            <FormItem label="Minimum amount to reach">
-              <InputNumber
-                disabled={unlimitMinReachValue}
-                value={minReachValue}
-                min={0}
-                onChange={this.handleMinReachValue}
-              />
-            </FormItem>
+            
             <FormItem label="Campaign Start - End">
               <RangePicker
-       
+
                 format="YYYY-MM-DD"
                 placeholder={['Start Time', 'End Time']}
                 onChange={this.handleDateChange}
                 onOk={this.handleDateChange}
               />
             </FormItem>
+
+            {this.state.selectedType === 'money' ? (
+              <FormItem label="Phone for PromtPay">
+                <Input
+                  value={this.state.phone}
+                  onChange={this.handlePhoneChange}
+                />
+              </FormItem>
+            ) : null}
+
           </Form>
+
           <Button type="primary" onClick={this.handleSubmit}>Apply</Button>
         </FormContainer>
       </ContentContainer>
@@ -243,7 +264,8 @@ const submitCampaign = gql`
     $endDate: String!, 
     $minimumGoal: Int!, 
     $maximumGoal: Int!, 
-    $isUnlimit: Boolean, 
+    $isUnlimit: Boolean,
+    $promptPayMobile: String,
     $images: [String]!) {
     createCampaign(
       name: $name,
@@ -254,7 +276,8 @@ const submitCampaign = gql`
       minimumGoal: $minimumGoal,
       maximumGoal: $maximumGoal,
       isUnlimit: $isUnlimit,
-      images: $images
+      images: $images,
+      promptPayMobile: $promptPayMobile
     ) {
       id
       name
