@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { gql, graphql, withApollo } from 'react-apollo';
 import {
   Layout,
   Form,
@@ -40,10 +41,14 @@ class NewCampaign extends Component {
     previewImage: '',
     fileList: [],
     selectedType: 'money',
-    maxReachValue: null,
-    minReachValue: null,
+    maxReachValue: 0,
+    minReachValue: 0,
     unlimitMaxReachValue: false,
-    unlimitMinReactValue: false
+    unlimitMinReactValue: false,
+    name: '',
+    description: '',
+    startDate: '',
+    endDate: ''
   }
 
   constructor(props) {
@@ -53,12 +58,16 @@ class NewCampaign extends Component {
   // -- Upload handlr
   handleUploadCancel = () => this.setState({ previewVisible: false })
   handleUploadPreview = (file) => {
+    console.log('handleUploadPreview', file)
     this.setState({
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
     });
   }
-  handleUploadChange = ({ fileList }) => this.setState({ fileList })
+  handleUploadChange = ({ fileList }) => { 
+    console.log('handleUploadChange', fileList)
+    this.setState({ fileList })
+  }
 
   // -- Campaign type handlr
   handleCampaignType = (event) => {
@@ -70,12 +79,71 @@ class NewCampaign extends Component {
     this.setState({ maxReachValue: value })
   }
 
+  handleMinReachValue = (value) => {
+    this.setState({ minReachValue: value })
+  }
+
   // -- Checkbox handlr
   handdleUnlimitMaxReachValue = (event) => {
     this.setState({ unlimitMaxReachValue: event.target.checked })
   }
   handdleUnlimitMinReachValue = (event) => {
     this.setState({ unlimitMinReachValue: event.target.checked })
+  }
+
+  // -- Text Change
+  handleNameChange = (event) => {
+    this.setState({
+      name: event.target.value
+    })
+  }
+
+  handleDetailChange = (event) => {
+    this.setState({
+      description: event.target.value
+    })
+  }
+
+  handleDateChange = (value, dateString)  => {
+    const startDate = value[0]
+    const endDate = value[1]
+
+    this.setState({
+      startDate,
+      endDate
+    })
+  }
+
+  handleSubmit = () => {
+    console.log(this.state)
+    const images = this.state.fileList.map( file => {
+      const response = file.response
+      return response.url
+    })
+
+    const name = this.state.name
+    const description = this.state.description
+    const goalType = this.state.selectedType
+    const minimumGoal = this.state.unlimitMinReachValue ? 0 : parseInt(this.state.minReachValue)
+    const maximumGoal = parseInt(this.state.maxReachValue)
+    const isUnlimit = this.state.unlimitMaxReachValue
+    const startDate = this.state.startDate.toISOString()
+    const endDate = this.state.endDate.toISOString()
+
+    console.log({ 
+      name, description, goalType, minimumGoal, maximumGoal, isUnlimit, startDate, endDate, images
+     })
+
+    this.props.mutate({
+      variables: { 
+        name, description, goalType, minimumGoal, maximumGoal, isUnlimit, startDate, endDate, images
+       }
+    }).then((res) => {
+      const id = res.data.createCampaign.id
+      this.props.history.replace('/campaign/' + id)
+    }).catch(error => {
+      console.log(error)
+    })
   }
 
   render() {
@@ -86,7 +154,9 @@ class NewCampaign extends Component {
       fileList,
       selectedType,
       unlimitMaxReachValue,
-      unlimitMinReachValue
+      unlimitMinReachValue,
+      maxReachValue,
+      minReachValue
     } = this.state;
     const uploadButton = (
       <div>
@@ -107,14 +177,18 @@ class NewCampaign extends Component {
 
             </FormItem>
             <FormItem label="Your campaign Name">
-              <Input placeholder="Name..." />
+              <Input placeholder="Name..." 
+              onChange={this.handleNameChange}
+              value={this.state.name} />
             </FormItem>
             <FormItem label="Describe what you’ll be creating.">
-              <TextArea rows={4} />
+              <TextArea rows={4} 
+              onChange={this.handleDetailChange}
+              value={this.state.description}/>
             </FormItem>
             <FormItem label="Promote images">
               <Upload
-                action="//jsonplaceholder.typicode.com/posts/"
+                action="//localhost:2000/upload/"
                 listType="picture-card"
                 fileList={fileList}
                 onPreview={this.handleUploadPreview}
@@ -129,9 +203,7 @@ class NewCampaign extends Component {
             <FormItem label="Maximum amount to reach">
               <InputNumber
                 disabled={unlimitMaxReachValue}
-                defaultValue={0}
-                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                value={maxReachValue}
                 min={0}
                 onChange={this.handleMaxReachValue}
               />
@@ -140,9 +212,7 @@ class NewCampaign extends Component {
             <FormItem label="Minimum amount to reach">
               <InputNumber
                 disabled={unlimitMinReachValue}
-                defaultValue={0}
-                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                value={minReachValue}
                 min={0}
                 onChange={this.handleMinReachValue}
               />
@@ -150,20 +220,55 @@ class NewCampaign extends Component {
             </FormItem>
             <FormItem label="Campaign Start - End">
               <RangePicker
-                showTime={{ format: 'HH:mm' }}
-                format="YYYY-MM-DD HH:mm"
+       
+                format="YYYY-MM-DD"
                 placeholder={['Start Time', 'End Time']}
-                onChange={(value, dateString) => console.log(dateString)}
-                onOk={(value) => console.log(value)}
+                onChange={this.handleDateChange}
+                onOk={this.handleDateChange}
               />
             </FormItem>
           </Form>
-          <Button type="primary">Apply</Button>
+          <Button type="primary" onClick={this.handleSubmit}>Apply</Button>
         </FormContainer>
       </ContentContainer>
     )
   }
 }
 
+const submitCampaign = gql`
+  mutation createCampaign(
+    $name: String!, 
+    $description: String!
+    $goalType: String!, 
+    $endDate: String!, 
+    $minimumGoal: Int!, 
+    $maximumGoal: Int!, 
+    $isUnlimit: Boolean, 
+    $images: [String]!) {
+    createCampaign(
+      name: $name,
+      description: $description,
+      goalType: $goalType,
+      startDate: $endDate
+      endDate: $endDate,
+      minimumGoal: $minimumGoal,
+      maximumGoal: $maximumGoal,
+      isUnlimit: $isUnlimit,
+      images: $images
+    ) {
+      id
+      name
+      creator
+      goalType,
+      minimumGoal,
+      maximumGoal,
+      current,
+      endDate,
+      startDate,
+      isUnlimit,
+      images
+    }
+  }
+`;
 
-export default NewCampaign
+export default graphql(submitCampaign)(NewCampaign)
