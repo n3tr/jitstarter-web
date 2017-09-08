@@ -125,7 +125,7 @@ class NewCampaign extends Component {
     const name = this.state.name
     const description = this.state.description
     const goalType = this.state.selectedType
-    const minimumGoal = this.state.unlimitMinReachValue ? 0 : parseInt(this.state.minReachValue)
+    const minimumGoal = parseInt(this.state.minReachValue)
     const maximumGoal = parseInt(this.state.maxReachValue)
     const isUnlimit = this.state.unlimitMaxReachValue
     const startDate = this.state.startDate.toISOString()
@@ -217,7 +217,6 @@ class NewCampaign extends Component {
                 min={0}
                 onChange={this.handleMinReachValue}
               />
-              <Checkbox onChange={this.handdleUnlimitMinReachValue}>Unlimit</Checkbox>
             </FormItem>
             <FormItem label="Campaign Start - End">
               <RangePicker
