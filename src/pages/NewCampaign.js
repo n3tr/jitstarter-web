@@ -133,7 +133,11 @@ class NewCampaign extends Component {
     const description = this.state.description
     const goalType = this.state.selectedType
     const minimumGoal = parseInt(this.state.minReachValue)
-    const maximumGoal = parseInt(this.state.maxReachValue)
+    let maximumGoal = parseInt(this.state.maxReachValue)
+    if (minimumGoal > maximumGoal) {
+      maximumGoal = minimumGoal
+    }
+
     const isUnlimit = this.state.unlimitMaxReachValue
     const startDate = this.state.startDate.toISOString()
     const endDate = this.state.endDate.toISOString()
