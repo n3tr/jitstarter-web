@@ -13,26 +13,27 @@ import {
 const { Header, Content, Footer } = Layout;
 
 const ContentContainer = styled(Content) `
-padding: 24px;
+ padding: 24px;
 `
-
 const Headline = styled.h1`
-color: dimgray;
+ color: dimgray;
 `
 const ImageStyle = styled.img`
-max-width: 100%;
-max-height: 100%;
-height: 400px;
-width: 100%;
-overflow: hidden;
+ height: 400px;
+ width: 100%;
+ overflow: hidden;
 `
 const CardContainer = styled.div`
-padding: 0 10px 10px 0;
+ padding: 0 10px 10px 0;
 `
 const OwnerStyle = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+`
+const ImageContainer = styled.div`
+ position: relative;
+ background-size: cover;
 `
 
 class CampaignDetail extends Component {
@@ -45,10 +46,10 @@ class CampaignDetail extends Component {
           <Col span={18}>
             <CardContainer>
               <Carousel autoplay>
-                <div><ImageStyle src="https://images.unsplash.com/photo-1501940740999-480321d51e5a?dpr=2&auto=compress,format&fit=crop&w=376&h=251&q=80&cs=tinysrgb&crop=" /></div>
-                <div><ImageStyle src="https://images.unsplash.com/photo-1502236928994-d4db1522a6d4?dpr=2&auto=compress,format&fit=crop&w=568&h=852&q=80&cs=tinysrgb&crop=" /></div>
-                <div><ImageStyle src="https://images.unsplash.com/photo-1483678342228-f583a0f5ca96?dpr=2&auto=compress,format&fit=crop&w=568&h=279&q=80&cs=tinysrgb&crop=" /></div>
-                <div><ImageStyle src="https://images.unsplash.com/photo-1494707924465-e1426acb48cb?dpr=2&auto=compress,format&fit=crop&w=376&h=251&q=80&cs=tinysrgb&crop=" /></div>
+                <ImageContainer><ImageStyle src="https://images.unsplash.com/photo-1501940740999-480321d51e5a?dpr=2&auto=compress,format&fit=crop&w=376&h=251&q=80&cs=tinysrgb&crop=" /></ImageContainer>
+                <ImageContainer><ImageStyle src="https://images.unsplash.com/photo-1502236928994-d4db1522a6d4?dpr=2&auto=compress,format&fit=crop&w=568&h=852&q=80&cs=tinysrgb&crop=" /></ImageContainer>
+                <ImageContainer><ImageStyle src="https://images.unsplash.com/photo-1483678342228-f583a0f5ca96?dpr=2&auto=compress,format&fit=crop&w=568&h=279&q=80&cs=tinysrgb&crop=" /></ImageContainer>
+                <ImageContainer><ImageStyle src="https://images.unsplash.com/photo-1494707924465-e1426acb48cb?dpr=2&auto=compress,format&fit=crop&w=376&h=251&q=80&cs=tinysrgb&crop=" /></ImageContainer>
               </Carousel>
             </CardContainer>
             <Row>
