@@ -74,6 +74,10 @@ class CampaignDetail extends Component {
       return <p>Loading...</p>
     }
 
+    if (this.props.data.error) {
+      return <h1>Error!</h1>
+    }
+
     const campaign = this.props.data.campaign
     console.log(campaign)
 
@@ -120,7 +124,7 @@ class CampaignDetail extends Component {
               <CardContainer>
                 <Card title="Owner">
                   <OwnerStyle>
-                    <Avatar size="small" icon="user" /> {campaign.creator ? campaign.creator.name : 'unknonwn'}
+                    <Avatar size="small" src={campaign.creator.picture} style={{ marginRight: 12 }}/> {campaign.creator ?  campaign.creator.name : ' unknonwn'}
                   </OwnerStyle>
                 </Card>
               </CardContainer>
@@ -143,6 +147,8 @@ class CampaignDetail extends Component {
                   }
                   <Button onClick={this.joinButtonPress} type="primary">Join!</Button>
                 </Card>
+              </CardContainer>
+              <CardContainer>
               </CardContainer>
             </Row>
           </Col>
