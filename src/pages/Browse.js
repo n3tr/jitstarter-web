@@ -67,8 +67,15 @@ const CampaignItem = (props) => {
   } else if (campaign.current === 0) {
     percent = 0
   }  else {
-    percent = (campaign.current / campaign.minimumGoal * 100).toFixed('0.00')
+    const _percent = (campaign.current / campaign.minimumGoal * 100).toFixed('0.00')
+    if (_percent > 100) {
+      percent = 100
+    } else {
+      percent = _percent
+    }
   }
+
+  console.log(percent)
 
   return (
 
