@@ -165,6 +165,16 @@ class CampaignDetail extends Component {
                   </Card>
                 </CardContainer> : null}
             </Row>
+            { campaign.qrCode ? (
+              <Row>
+              <CardContainer>
+                <Card title="PrompPay QR Code">
+                  <div dangerouslySetInnerHTML={{ __html: campaign.qrCode }} />
+                </Card>
+              </CardContainer>
+            </Row>
+            ): null }
+            
           </Col>
           <Col span={6}>
             <DetailBox
