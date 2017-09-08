@@ -120,7 +120,7 @@ class CampaignDetail extends Component {
               <CardContainer>
                 <Card title="Owner">
                   <OwnerStyle>
-                    <Avatar size="small" icon="user" /> {campaign.creator.name}
+                    <Avatar size="small" icon="user" /> {campaign.creator ? campaign.creator.name : 'unknonwn'}
                   </OwnerStyle>
                 </Card>
               </CardContainer>
