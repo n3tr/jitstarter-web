@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { graphql, gql } from 'react-apollo'
 import { Layout } from 'antd'
 const { Content } = Layout
 
@@ -70,8 +71,9 @@ const CampaignItem = (props) => {
   )
 }
 
-export default class Browse extends React.Component {
+class Browse extends React.Component {
   render() {
+    console.log(this.props)
     return (
       <Content style={{ padding: '50px 50px', display: 'flex', direction: 'row', flexWrap: 'wrap' }}>
         {Array.from({ length: 12 }).map((i, index) => {
@@ -83,3 +85,25 @@ export default class Browse extends React.Component {
     )
   }
 }
+
+
+const listCampaign = gql`
+  query listCampaign {
+    campaigns {
+      id
+      name
+      creator
+      goalType,
+      minimumGoal,
+      maximumGoal,
+      current,
+      endDate,
+      startDate,
+      isUnlimit,
+      images
+    }
+  }
+`
+
+export default graphql(listCampaign)(Browse)
+

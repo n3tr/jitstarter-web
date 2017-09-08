@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import DetailBox from '../components/DetailBox'
+import { graphql, gql, withApollo } from 'react-apollo'
+import { withRouter } from 'react-router'
 import {
   Layout,
   Row,
@@ -39,6 +41,12 @@ const ImageContainer = styled.div`
 class CampaignDetail extends Component {
 
   render() {
+    if (this.props.data.loading) {
+      return <p>Loading...</p>
+    }
+
+    const campaign = this.props.data.campaign
+
     return (
       <ContentContainer>
         <Headline>Campaign name awesome</Headline>
@@ -92,4 +100,26 @@ class CampaignDetail extends Component {
   }
 }
 
-export default CampaignDetail
+const listCampaign = gql`
+  query Campaign($id: String!) {
+    campaign(id: $id) {
+      id
+      name
+      creator
+      goalType,
+      minimumGoal,
+      maximumGoal,
+      current,
+      endDate,
+      startDate,
+      isUnlimit,
+      images
+    }
+  }
+`
+
+export default graphql(listCampaign, {
+  options: (props) => {
+    return { variables: { id: props.match.params.id } }
+  }
+})(CampaignDetail)
