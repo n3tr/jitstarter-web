@@ -109,7 +109,7 @@ class CampaignDetail extends Component {
     } else if (campaign.current === 0) {
       percent = 0
     } else {
-      percent = campaign.current / campaign.minimumGoal * 100
+      percent = (campaign.current / campaign.minimumGoal * 100).toFixed('0.00')
     }
 
     return (
@@ -139,7 +139,6 @@ class CampaignDetail extends Component {
               </CardContainer>
             </Row>
             <Row>
-<<<<<<< HEAD
               {showJoinComponent ?
                 <CardContainer>
                   <Card title="Join Campaign">
@@ -159,28 +158,6 @@ class CampaignDetail extends Component {
                     <Button onClick={this.joinButtonPress} type="primary">Join!</Button>
                   </Card>
                 </CardContainer> : null}
-=======
-              <CardContainer>
-                <Card title="Join Campaign">
-                  {campaign.goalType === 'money' &&
-                    <Form>
-                      <FormItem label="Fill amount">
-                        <InputNumber
-                          defaultValue={0}
-                          formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                          parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                          min={0}
-                          onChange={(val) => this.setState({ supporterAmount: val })}
-                        />
-                      </FormItem>
-                    </Form>
-                  }
-                  <Button onClick={this.joinButtonPress} type="primary">Join!</Button>
-                </Card>
-              </CardContainer>
-              <CardContainer>
-              </CardContainer>
->>>>>>> d42a27b7fcef6df9da458681ab7635f0d4c0b023
             </Row>
           </Col>
           <Col span={6}>

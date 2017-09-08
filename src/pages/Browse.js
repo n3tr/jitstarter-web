@@ -67,7 +67,7 @@ const CampaignItem = (props) => {
   } else if (campaign.current === 0) {
     percent = 0
   }  else {
-    percent = campaign.current / campaign.minimumGoal * 100
+    percent = (campaign.current / campaign.minimumGoal * 100).toFixed('0.00')
   }
 
   return (
