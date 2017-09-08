@@ -161,6 +161,7 @@ const listCampaign = gql`
       id
       name
       creator {
+        id
         name
       }
       supporters {
