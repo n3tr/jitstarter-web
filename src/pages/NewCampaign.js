@@ -284,6 +284,7 @@ const submitCampaign = gql`
       creator {
         id
         name
+        picture
       }
       goalType
       minimumGoal
@@ -293,6 +294,7 @@ const submitCampaign = gql`
       startDate
       isUnlimit
       images
+      qrCode
     }
   }
 `;

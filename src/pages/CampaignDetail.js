@@ -171,11 +171,13 @@ const listCampaign = gql`
       creator {
         id
         name
+        picture
       }
       supporters {
         user {
           id
           name
+          picture
         }
         money
       }
@@ -187,14 +189,41 @@ const listCampaign = gql`
       startDate,
       isUnlimit,
       images,
-      description
+      description,
+      qrCode
     }
   }
 `
 
 const joinCampaign = gql`
   mutation($campaignId: String!, $money: Int) {
-    joinCampaign(campaignId: $campaignId, money: $money)
+    joinCampaign(campaignId: $campaignId, money: $money) {
+      id
+      name
+      creator {
+        id
+        name
+        picture
+      }
+      supporters {
+        user {
+          id
+          name
+          picture
+        }
+        money
+      }
+      goalType,
+      minimumGoal,
+      maximumGoal,
+      current,
+      endDate,
+      startDate,
+      isUnlimit,
+      images,
+      description,
+      qrCode
+    }
   }
 `
 
