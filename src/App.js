@@ -1,3 +1,4 @@
+import './index.css'
 import 'antd/dist/antd.css'
 import enUS from 'antd/lib/locale-provider/en_US';
 import React, { Component } from 'react';

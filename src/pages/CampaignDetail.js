@@ -75,6 +75,10 @@ class CampaignDetail extends Component {
       return <p>Loading...</p>
     }
 
+    if (this.props.data.error) {
+      return <h1>Error!</h1>
+    }
+
     const campaign = this.props.data.campaign
 
     console.log(campaign)
@@ -129,12 +133,13 @@ class CampaignDetail extends Component {
               <CardContainer>
                 <Card title="Owner">
                   <OwnerStyle>
-                    <Avatar size="small" icon="user" /> {campaign.creator ? campaign.creator.name : 'unknonwn'}
+                    <Avatar size="small" src={campaign.creator.picture} style={{ marginRight: 12 }}/> {campaign.creator ?  campaign.creator.name : ' unknonwn'}
                   </OwnerStyle>
                 </Card>
               </CardContainer>
             </Row>
             <Row>
+<<<<<<< HEAD
               {showJoinComponent ?
                 <CardContainer>
                   <Card title="Join Campaign">
@@ -154,6 +159,28 @@ class CampaignDetail extends Component {
                     <Button onClick={this.joinButtonPress} type="primary">Join!</Button>
                   </Card>
                 </CardContainer> : null}
+=======
+              <CardContainer>
+                <Card title="Join Campaign">
+                  {campaign.goalType === 'money' &&
+                    <Form>
+                      <FormItem label="Fill amount">
+                        <InputNumber
+                          defaultValue={0}
+                          formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                          parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                          min={0}
+                          onChange={(val) => this.setState({ supporterAmount: val })}
+                        />
+                      </FormItem>
+                    </Form>
+                  }
+                  <Button onClick={this.joinButtonPress} type="primary">Join!</Button>
+                </Card>
+              </CardContainer>
+              <CardContainer>
+              </CardContainer>
+>>>>>>> d42a27b7fcef6df9da458681ab7635f0d4c0b023
             </Row>
           </Col>
           <Col span={6}>
