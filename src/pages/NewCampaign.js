@@ -145,7 +145,7 @@ class NewCampaign extends Component {
 
     this.props.mutate({
       variables: {
-        name, description, goalType, minimumGoal, maximumGoal, isUnlimit, startDate, endDate, images
+        name, description, goalType, minimumGoal, maximumGoal, isUnlimit, startDate, endDate, images, promptPayMobile
       }
     }).then((res) => {
       const id = res.data.createCampaign.id
