@@ -45,7 +45,7 @@ class App extends Component {
             <Route exact path="/auth/:token" exact component={Auth} />
             <PrivateRoute path="/" exact component={Browse} />
             <PrivateRoute path="/newCampaign" exact component={NewCampaign} />
-            <PrivateRoute path="/campaignDetail" exact component={CampaignDetail} />
+            <PrivateRoute path="/campaign/:id" exact component={CampaignDetail} />
 
             <Footer style={{ textAlign: 'center' }}>
               Jitstarter

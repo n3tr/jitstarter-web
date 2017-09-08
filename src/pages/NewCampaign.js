@@ -138,8 +138,9 @@ class NewCampaign extends Component {
       variables: { 
         name, description, goalType, minimumGoal, maximumGoal, isUnlimit, startDate, endDate, images
        }
-    }).then((data) => {
-      console.log(data)
+    }).then((res) => {
+      const id = res.data.createCampaign.id
+      this.props.history.replace('/campaign/' + id)
     }).catch(error => {
       console.log(error)
     })
@@ -255,7 +256,17 @@ const submitCampaign = gql`
       isUnlimit: $isUnlimit,
       images: $images
     ) {
+      id
       name
+      creator
+      goalType,
+      minimumGoal,
+      maximumGoal,
+      current,
+      endDate,
+      startDate,
+      isUnlimit,
+      images
     }
   }
 `;
