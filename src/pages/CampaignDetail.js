@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import DetailBox from '../components/DetailBox'
-import { graphql, gql, withApollo } from 'react-apollo'
+import { graphql, gql, withApollom, compose } from 'react-apollo'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import {
@@ -46,20 +46,28 @@ const ImageContainer = styled.div`
 class CampaignDetail extends Component {
 
   state = {
-    supporterAmount: 0,
+    supporterAmount: null,
 
   }
 
-  joinButtonPress() {
+  joinButtonPress = (props) => {
     const campaign = this.props.data.campaign
     if (campaign.goalType === "money") {
-      if (this.state.supporterAmount <= 0) {
-        alert('Please fill you money for support this campaign')
+      if (this.state.supporterAmount == null) {
+        alert('Please fill you money to support this campaign')
         return
       }
     }
-    console.log('>>>>')
+
+    this.props.joinCampaign(campaign.id, this.state.supporterAmount)
+      .then(({ data }) => {
+        alert('joined!')
+      })
+      .catch((e) => {
+        alert(e)
+      })
   }
+
 
   render() {
     if (this.props.data.loading) {
@@ -74,12 +82,12 @@ class CampaignDetail extends Component {
     if (campaign.minimumGoal <= 0) {
       reachText = `${campaign.current} / ${campaign.minimumGoal}`
     } else {
-      reachText = `${campaign.current} / ${campaign.minimumGoal} ~ ${campaign.maximumGoal}`
+      reachText = `${campaign.current} / ${campaign.minimumGoal} ~ ${campaign.isUnlimit ? 'Unlimit' : campaign.maximumGoal}`
     }
 
     let images = null
     if (campaign.images.length > 0) {
-      images = campaign.images.map((image) => <ImageContainer><ImageStyle src={image} /></ImageContainer>)
+      images = campaign.images.map((image, i) => <ImageContainer key={i}><ImageStyle src={image} /></ImageContainer>)
     }
 
     let percent = 0
@@ -128,12 +136,12 @@ class CampaignDetail extends Component {
                           formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                           parser={value => value.replace(/\$\s?|(,*)/g, '')}
                           min={0}
-                          onChange={(val) => this.setState({ supporterAmount: val }) }
+                          onChange={(val) => this.setState({ supporterAmount: val })}
                         />
                       </FormItem>
                     </Form>
                   }
-                  <Button onClick={() => {}} type="primary">Join!</Button>
+                  <Button onClick={this.joinButtonPress} type="primary">Join!</Button>
                 </Card>
               </CardContainer>
             </Row>
@@ -183,8 +191,24 @@ const listCampaign = gql`
   }
 `
 
-export default graphql(listCampaign, {
-  options: (props) => {
-    return { variables: { id: props.match.params.id } }
+const joinCampaign = gql`
+  mutation($campaignId: String!, $money: Int) {
+    joinCampaign(campaignId: $campaignId, money: $money)
   }
-})(CampaignDetail)
+`
+
+
+export default compose(
+  graphql(listCampaign, {
+    options: (props) => {
+      return { variables: { id: props.match.params.id } }
+    }
+  }),
+  graphql(joinCampaign, {
+    props: ({ mutate }) => ({
+      joinCampaign: (campaignId, money) => mutate({
+        variables: { campaignId, money }
+      })
+    })
+  })
+)(CampaignDetail)

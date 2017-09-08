@@ -79,7 +79,7 @@ const DetailBox = ({ expire, progress, reach, joined, type, onChange }) => {
 }
 
 DetailBox.propTypes = {
-  expire: propTypes.func.isRequired,
+  expire: propTypes.object.isRequired,
   progress: propTypes.number.isRequired,
   reach: propTypes.string.isRequired,
   joined: propTypes.array.isRequired
