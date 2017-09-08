@@ -25,6 +25,15 @@ class Session {
     localStorage.setItem('name', name)
     localStorage.setItem('id', id)
   }
+
+  logout() {
+    this.id = null
+    this.name = null
+    this.token = null
+    localStorage.removeItem('id')
+    localStorage.removeItem('name')
+    localStorage.removeItem('token')
+  }
 }
 
 export default new Session()

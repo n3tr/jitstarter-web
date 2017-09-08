@@ -3,7 +3,9 @@ import styled from 'styled-components'
 import { graphql, gql } from 'react-apollo'
 import { Layout, Spin, Progress } from 'antd'
 import { Link } from 'react-router-dom'
+import Loading from '../components/Loading'
 const { Content } = Layout
+
 
 const CampaignContainer = styled.div`
   min-width: 25%;
@@ -90,7 +92,7 @@ const CampaignItem = (props) => {
 class Browse extends React.Component {
   render() {
     if (this.props.data.loading) {
-      return <div><Spin size="large" /></div>
+      return <Loading />
     }
     return (
       <Content style={{ padding: '50px 50px', display: 'flex', direction: 'row', flexWrap: 'wrap' }}>

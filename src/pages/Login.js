@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+const config = require('../config')
 
 const Container = styled.div`
   width: 400px;
@@ -10,7 +11,7 @@ const Container = styled.div`
 `
 
 
-const redirectUrl = process.env.REACT_APP_HOST ? process.env.REACT_APP_HOST : 'http://localhost:3000'
+const redirectUrl = config.APP_HOST
 
 
 export default class Login extends React.Component {

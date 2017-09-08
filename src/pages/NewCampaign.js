@@ -20,6 +20,7 @@ const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const { Content } = Layout;
+const config = require('../config')
 
 const ContentContainer = styled(Content) `
   padding: 24px;
@@ -188,7 +189,7 @@ class NewCampaign extends Component {
             </FormItem>
             <FormItem label="Promote images">
               <Upload
-                action="//localhost:2000/upload/"
+                action={`${config.GRAPHQL_HOST}/upload/`}
                 listType="picture-card"
                 fileList={fileList}
                 onPreview={this.handleUploadPreview}
