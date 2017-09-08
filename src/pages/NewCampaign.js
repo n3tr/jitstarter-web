@@ -20,6 +20,7 @@ const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const { Content } = Layout;
+const config = require('../config')
 
 const ContentContainer = styled(Content) `
   padding: 24px;
@@ -124,7 +125,7 @@ class NewCampaign extends Component {
     const name = this.state.name
     const description = this.state.description
     const goalType = this.state.selectedType
-    const minimumGoal = this.state.unlimitMinReachValue ? 0 : parseInt(this.state.minReachValue)
+    const minimumGoal = parseInt(this.state.minReachValue)
     const maximumGoal = parseInt(this.state.maxReachValue)
     const isUnlimit = this.state.unlimitMaxReachValue
     const startDate = this.state.startDate.toISOString()
@@ -188,7 +189,7 @@ class NewCampaign extends Component {
             </FormItem>
             <FormItem label="Promote images">
               <Upload
-                action="//localhost:2000/upload/"
+                action={`${config.GRAPHQL_HOST}/upload/`}
                 listType="picture-card"
                 fileList={fileList}
                 onPreview={this.handleUploadPreview}
@@ -216,7 +217,6 @@ class NewCampaign extends Component {
                 min={0}
                 onChange={this.handleMinReachValue}
               />
-              <Checkbox onChange={this.handdleUnlimitMinReachValue}>Unlimit</Checkbox>
             </FormItem>
             <FormItem label="Campaign Start - End">
               <RangePicker
@@ -258,14 +258,17 @@ const submitCampaign = gql`
     ) {
       id
       name
-      creator
-      goalType,
-      minimumGoal,
-      maximumGoal,
-      current,
-      endDate,
-      startDate,
-      isUnlimit,
+      creator {
+        id
+        name
+      }
+      goalType
+      minimumGoal
+      maximumGoal
+      current
+      endDate
+      startDate
+      isUnlimit
       images
     }
   }

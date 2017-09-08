@@ -1,8 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { graphql, gql } from 'react-apollo'
-import { Layout } from 'antd'
+import { Layout, Spin, Progress } from 'antd'
+import { Link } from 'react-router-dom'
+import Loading from '../components/Loading'
 const { Content } = Layout
+
 
 const CampaignContainer = styled.div`
   min-width: 25%;
@@ -33,6 +36,7 @@ height: 100%;
 width: 100%;
 background: transparent url(${props => props.src});
 background-size: cover;
+background-position: center;
 `
 
 const CampaignImageDiv = styled.div`
@@ -56,16 +60,30 @@ padding: 0;
 `
 
 const CampaignItem = (props) => {
+  const { campaign } = props
+  let percent = 0 
+  if (campaign.minimumGoal === 0) {
+    percent = 100
+  } else if (campaign.current === 0) {
+    percent = 0
+  }  else {
+    percent = campaign.minimumGoal / campaign.current
+  }
+     
   return (
+    
     <CampaignContainer>
       <CampaignInner>
+        <Link to={'/campaign/' + campaign.id}>
         <ImageContainer>
-          <ImageAbs src={props.campaign.image} />
+          { campaign.images.length > 0 ? <ImageAbs src={campaign.images[0]} /> : null }
         </ImageContainer>
         <CardBody>
-          <CardTitle>Test</CardTitle>
-          <CardBy>by someone</CardBy>
+          <CardTitle>{campaign.name}</CardTitle>
+          <CardBy>by {campaign.creator.name}</CardBy>
+          <Progress percent={percent} strokeWidth={5} />
         </CardBody>
+        </Link>
       </CampaignInner>
     </CampaignContainer>
   )
@@ -73,13 +91,13 @@ const CampaignItem = (props) => {
 
 class Browse extends React.Component {
   render() {
-    console.log(this.props)
+    if (this.props.data.loading) {
+      return <Loading />
+    }
     return (
       <Content style={{ padding: '50px 50px', display: 'flex', direction: 'row', flexWrap: 'wrap' }}>
-        {Array.from({ length: 12 }).map((i, index) => {
-          return <CampaignItem key={index} campaign={{
-            image: index % 2 === 0 ? 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png' : 'https://ksr-ugc.imgix.net/assets/017/906/988/cb35b162a455cc137957a27550c24f09_original.jpg?crop=faces&w=560&h=315&fit=crop&v=1503731494&auto=format&q=92&s=a5e17f688fbb11a57281a837255660a9'
-          }} />
+        {this.props.data.campaigns.map((campaign, index) => {
+          return <CampaignItem key={index} campaign={campaign} />
         })}
       </Content>
     )
@@ -92,7 +110,9 @@ const listCampaign = gql`
     campaigns {
       id
       name
-      creator
+      creator {
+        name
+      }
       goalType,
       minimumGoal,
       maximumGoal,

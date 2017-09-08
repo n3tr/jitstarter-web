@@ -1,5 +1,5 @@
-import { ApolloClient, createNetworkInterface, applyMiddleware } from 'react-apollo';
-
+import { ApolloClient, createNetworkInterface, applyMiddleware, applyAfterware } from 'react-apollo';
+import Session from './Session'
 
 export default () => {
   const networkInterface = createNetworkInterface({
@@ -15,10 +15,19 @@ export default () => {
       if (!req.options.headers) {
         req.options.headers = {};  // Create the header object if needed.
       }
-      req.options.headers['authorization'] = localStorage.getItem('token') ? localStorage.getItem('token') : null;
+      req.options.headers['authorization'] = Session.token
       next();
     }
-  }]);
+  }])
+
+  networkInterface.useAfter([{
+    applyAfterware({ response }, next) {
+      if (response.status === 401) {
+        Session.logout()
+      }
+      next();
+    }
+  }])
   
   const client = new ApolloClient({
     networkInterface: networkInterface
