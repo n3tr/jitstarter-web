@@ -69,7 +69,7 @@ const DetailBox = ({ expire, progress, reach, joined, type, onChange }) => {
         <Card title="Who's Joined!">
           {joined.length > 0 ?
             <JoinedList>
-              {joined.map((item) => (<Item>{item.user.name} {item.money ? ` - ฿${numeral(item.money).format('0,0.00')}` : null}</Item>))}
+              {joined.map((item, i) => (<Item key={i}>{item.user.name} {item.money ? ` - ฿${numeral(item.money).format('0,0.00')}` : null}</Item>))}
             </JoinedList>
             : 'N/A'}
         </Card>

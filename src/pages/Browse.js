@@ -61,17 +61,17 @@ padding: 0;
 
 const CampaignItem = (props) => {
   const { campaign } = props
-  let percent = 0 
+  let percent = 0
   if (campaign.minimumGoal === 0) {
     percent = 100
   } else if (campaign.current === 0) {
     percent = 0
   }  else {
-    percent = campaign.minimumGoal / campaign.current
+    percent = campaign.current / campaign.minimumGoal * 100
   }
-     
+
   return (
-    
+
     <CampaignContainer>
       <CampaignInner>
         <Link to={'/campaign/' + campaign.id}>

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import DetailBox from '../components/DetailBox'
 import { graphql, gql, withApollom, compose } from 'react-apollo'
 import { withRouter } from 'react-router'
+import session from '../lib/Session'
 import moment from 'moment'
 import {
   Layout,
@@ -75,7 +76,15 @@ class CampaignDetail extends Component {
     }
 
     const campaign = this.props.data.campaign
+
     console.log(campaign)
+
+    let showJoinComponent = true
+    if (new Date(campaign.endDate) < new Date()) {
+      showJoinComponent = false
+    } else if (session.id === campaign.creator.id) {
+      showJoinComponent = false
+    }
 
     const expired = new Date(campaign.endDate)
     let reachText = 'N/A'
@@ -96,7 +105,7 @@ class CampaignDetail extends Component {
     } else if (campaign.current === 0) {
       percent = 0
     } else {
-      percent = campaign.minimumGoal / campaign.current
+      percent = campaign.current / campaign.minimumGoal * 100
     }
 
     return (
@@ -126,24 +135,25 @@ class CampaignDetail extends Component {
               </CardContainer>
             </Row>
             <Row>
-              <CardContainer>
-                <Card title="Join Campaign">
-                  {campaign.goalType === 'money' &&
-                    <Form>
-                      <FormItem label="Fill amount">
-                        <InputNumber
-                          defaultValue={0}
-                          formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                          parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                          min={0}
-                          onChange={(val) => this.setState({ supporterAmount: val })}
-                        />
-                      </FormItem>
-                    </Form>
-                  }
-                  <Button onClick={this.joinButtonPress} type="primary">Join!</Button>
-                </Card>
-              </CardContainer>
+              {showJoinComponent ?
+                <CardContainer>
+                  <Card title="Join Campaign">
+                    {campaign.goalType === 'money' &&
+                      <Form>
+                        <FormItem label="Fill amount">
+                          <InputNumber
+                            defaultValue={0}
+                            formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                            min={0}
+                            onChange={(val) => this.setState({ supporterAmount: val })}
+                          />
+                        </FormItem>
+                      </Form>
+                    }
+                    <Button onClick={this.joinButtonPress} type="primary">Join!</Button>
+                  </Card>
+                </CardContainer> : null}
             </Row>
           </Col>
           <Col span={6}>
