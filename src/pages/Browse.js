@@ -75,10 +75,7 @@ const CampaignItem = (props) => {
     }
   }
 
-  console.log(percent)
-
   return (
-
     <CampaignContainer>
       <CampaignInner>
         <Link to={'/campaign/' + campaign.id}>

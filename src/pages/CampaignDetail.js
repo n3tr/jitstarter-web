@@ -86,7 +86,13 @@ class CampaignDetail extends Component {
     let showJoinComponent = true
     if (new Date(campaign.endDate) < new Date()) {
       showJoinComponent = false
-    } else if (session.id === campaign.creator.id) {
+    }
+    if (session.id === campaign.creator.id) {
+      showJoinComponent = false
+    }
+    if(campaign.supporters.some(supporter => {
+      console.log(supporter.user.id, session.id)
+      return supporter.user.id === session.id })) {
       showJoinComponent = false
     }
 
@@ -133,7 +139,7 @@ class CampaignDetail extends Component {
               <CardContainer>
                 <Card title="Owner">
                   <OwnerStyle>
-                    <Avatar size="small" src={campaign.creator.picture} style={{ marginRight: 12 }}/> {campaign.creator ?  campaign.creator.name : ' unknonwn'}
+                    <Avatar size="small" src={campaign.creator.picture} style={{ marginRight: 12 }} /> {campaign.creator ? campaign.creator.name : ' unknonwn'}
                   </OwnerStyle>
                 </Card>
               </CardContainer>
