@@ -53,12 +53,16 @@ class NewCampaign extends Component {
   // -- Upload handlr
   handleUploadCancel = () => this.setState({ previewVisible: false })
   handleUploadPreview = (file) => {
+    console.log('handleUploadPreview', file)
     this.setState({
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
     });
   }
-  handleUploadChange = ({ fileList }) => this.setState({ fileList })
+  handleUploadChange = ({ fileList }) => { 
+    console.log('handleUploadChange', fileList)
+    this.setState({ fileList })
+  }
 
   // -- Campaign type handlr
   handleCampaignType = (event) => {
@@ -114,7 +118,7 @@ class NewCampaign extends Component {
             </FormItem>
             <FormItem label="Promote images">
               <Upload
-                action="//jsonplaceholder.typicode.com/posts/"
+                action="//localhost:2000/upload/"
                 listType="picture-card"
                 fileList={fileList}
                 onPreview={this.handleUploadPreview}

@@ -1,21 +1,25 @@
 import React from 'react'
-import { Layout, Menu } from 'antd';
+import { withRouter } from 'react-router'
+import { Link } from 'react-router-dom'
+import { Layout, Menu, Button, Icon } from 'antd';
+
 const { Header } = Layout;
 
-const AppHeader = () => (
-  <Header>
-    <div className="logo" />
+const AppHeader = (props) => (
+  <Header style={{ background: '#fff'}}>
     <Menu
-      theme="dark"
-      mode="horizontal"
-      defaultSelectedKeys={['2']}
-      style={{ lineHeight: '64px' }}
-    >
-      <Menu.Item key="1">nav 1</Menu.Item>
-      <Menu.Item key="2">nav 2</Menu.Item>
-      <Menu.Item key="3">nav 3</Menu.Item>
-    </Menu>
+        onClick={this.handleClick}
+        mode="horizontal"
+        style={{ lineHeight: '64px' }}
+      >        
+        <Menu.Item key="alipay">
+          <Link to="/" >Explore</Link>
+        </Menu.Item>
+        <Menu.Item key="new">
+          <Button type="primary" onClick={() => props.history.push('/newCampaign')}>New Campaign</Button>
+        </Menu.Item>
+      </Menu>      
   </Header>
 )
 
-export default AppHeader
+export default withRouter(AppHeader)
