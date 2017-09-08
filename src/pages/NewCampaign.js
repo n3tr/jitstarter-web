@@ -259,14 +259,17 @@ const submitCampaign = gql`
     ) {
       id
       name
-      creator
-      goalType,
-      minimumGoal,
-      maximumGoal,
-      current,
-      endDate,
-      startDate,
-      isUnlimit,
+      creator {
+        id
+        name
+      }
+      goalType
+      minimumGoal
+      maximumGoal
+      current
+      endDate
+      startDate
+      isUnlimit
       images
     }
   }
