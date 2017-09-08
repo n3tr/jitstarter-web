@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import propTypes from 'prop-types'
-import { Progress, Card, Button, InputNumber, Form } from 'antd';
+import { Progress, Card } from 'antd';
 import Countdown from 'react-countdown-now';
-
-const FormItem = Form.Item;
+import numeral from 'numeral'
 
 const Content = styled.div`
   background-color: #fff;
@@ -51,7 +50,7 @@ const DetailBox = ({ expire, progress, reach, joined, type, onChange }) => {
         <Card title="Expire in">
           <Display>
             <Countdown
-              daysInHours
+              //daysInHours
               date={expire}>
               <TimeOutStyle>Time Out!</TimeOutStyle>
             </Countdown>
@@ -68,27 +67,11 @@ const DetailBox = ({ expire, progress, reach, joined, type, onChange }) => {
       </CardContainer>
       <CardContainer>
         <Card title="Who's Joined!">
-          <JoinedList>
-            {joined.map((item) => (<Item>{item}</Item>))}
-          </JoinedList>
-        </Card>
-      </CardContainer>
-      <CardContainer>
-        <Card title="Join Campaign">
-          {type === 'money' &&
-            <Form>
-              <FormItem label="Fill amount">
-                <InputNumber
-                  defaultValue={0}
-                  formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                  parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                  min={0}
-                  onChange={onChange}
-                />
-              </FormItem>
-            </Form>
-          }
-          <Button type="primary">Join!</Button>
+          {joined.length > 0 ?
+            <JoinedList>
+              {joined.map((item) => (<Item>{item.user.name} {item.money ? ` - ฿${numeral(item.money).format('0,0.00')}` : null}</Item>))}
+            </JoinedList>
+            : 'N/A'}
         </Card>
       </CardContainer>
     </Content>
@@ -102,8 +85,5 @@ DetailBox.propTypes = {
   joined: propTypes.array.isRequired
 }
 
-DetailBox.defaultProps = {
-  type: 'people'
-}
 
 export default DetailBox

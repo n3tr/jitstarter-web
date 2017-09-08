@@ -3,15 +3,20 @@ import styled from 'styled-components'
 import DetailBox from '../components/DetailBox'
 import { graphql, gql, withApollo } from 'react-apollo'
 import { withRouter } from 'react-router'
+import moment from 'moment'
 import {
   Layout,
   Row,
   Col,
   Card,
   Carousel,
-  Avatar
+  Avatar,
+  InputNumber,
+  Form,
+  Button
 } from 'antd'
 
+const FormItem = Form.Item;
 const { Header, Content, Footer } = Layout;
 
 const ContentContainer = styled(Content) `
@@ -40,39 +45,95 @@ const ImageContainer = styled.div`
 
 class CampaignDetail extends Component {
 
+  state = {
+    supporterAmount: 0,
+
+  }
+
+  joinButtonPress() {
+    const campaign = this.props.data.campaign
+    if (campaign.goalType === "money") {
+      if (this.state.supporterAmount <= 0) {
+        alert('Please fill you money for support this campaign')
+        return
+      }
+    }
+    console.log('>>>>')
+  }
+
   render() {
     if (this.props.data.loading) {
       return <p>Loading...</p>
     }
 
     const campaign = this.props.data.campaign
+    console.log(campaign)
+
+    const expired = new Date(campaign.endDate)
+    let reachText = 'N/A'
+    if (campaign.minimumGoal <= 0) {
+      reachText = `${campaign.current} / ${campaign.minimumGoal}`
+    } else {
+      reachText = `${campaign.current} / ${campaign.minimumGoal} ~ ${campaign.maximumGoal}`
+    }
+
+    let images = null
+    if (campaign.images.length > 0) {
+      images = campaign.images.map((image) => <ImageContainer><ImageStyle src={image} /></ImageContainer>)
+    }
+
+    let percent = 0
+    if (campaign.minimumGoal === 0) {
+      percent = 100
+    } else if (campaign.current === 0) {
+      percent = 0
+    } else {
+      percent = campaign.minimumGoal / campaign.current
+    }
 
     return (
       <ContentContainer>
-        <Headline>Campaign name awesome</Headline>
+        <Headline>{campaign.name}</Headline>
         <Row>
           <Col span={18}>
             <CardContainer>
               <Carousel autoplay>
-                <ImageContainer><ImageStyle src="https://images.unsplash.com/photo-1501940740999-480321d51e5a?dpr=2&auto=compress,format&fit=crop&w=376&h=251&q=80&cs=tinysrgb&crop=" /></ImageContainer>
-                <ImageContainer><ImageStyle src="https://images.unsplash.com/photo-1502236928994-d4db1522a6d4?dpr=2&auto=compress,format&fit=crop&w=568&h=852&q=80&cs=tinysrgb&crop=" /></ImageContainer>
-                <ImageContainer><ImageStyle src="https://images.unsplash.com/photo-1483678342228-f583a0f5ca96?dpr=2&auto=compress,format&fit=crop&w=568&h=279&q=80&cs=tinysrgb&crop=" /></ImageContainer>
-                <ImageContainer><ImageStyle src="https://images.unsplash.com/photo-1494707924465-e1426acb48cb?dpr=2&auto=compress,format&fit=crop&w=376&h=251&q=80&cs=tinysrgb&crop=" /></ImageContainer>
+                {images}
               </Carousel>
             </CardContainer>
             <Row>
               <CardContainer>
                 <Card title="Description">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-              </Card>
+                  {campaign.description}
+                </Card>
               </CardContainer>
             </Row>
             <Row>
               <CardContainer>
                 <Card title="Owner">
                   <OwnerStyle>
-                    <Avatar size="small" icon="user" /> Yuttana
+                    <Avatar size="small" icon="user" /> {campaign.creator.name}
                   </OwnerStyle>
+                </Card>
+              </CardContainer>
+            </Row>
+            <Row>
+              <CardContainer>
+                <Card title="Join Campaign">
+                  {campaign.goalType === 'money' &&
+                    <Form>
+                      <FormItem label="Fill amount">
+                        <InputNumber
+                          defaultValue={0}
+                          formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                          parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                          min={0}
+                          onChange={(val) => this.setState({ supporterAmount: val }) }
+                        />
+                      </FormItem>
+                    </Form>
+                  }
+                  <Button onClick={() => {}} type="primary">Join!</Button>
                 </Card>
               </CardContainer>
             </Row>
@@ -80,17 +141,11 @@ class CampaignDetail extends Component {
           <Col span={6}>
             <DetailBox
               onChange={(e) => console.log(e)}
-              type="money"
-              reach="240 / 600 ~ 1,200"
-              progress={30}
-              expire={Date.now() + 10000}
-              joined={[
-                'adh',
-                'net',
-                'bird',
-                'bookn',
-                'ying'
-              ]}
+              type={campaign.goalType}
+              reach={reachText}
+              progress={percent}
+              expire={expired}
+              joined={campaign.supporters}
             />
           </Col>
         </Row>
@@ -105,7 +160,16 @@ const listCampaign = gql`
     campaign(id: $id) {
       id
       name
-      creator
+      creator {
+        name
+      }
+      supporters {
+        user {
+          id
+          name
+        }
+        money
+      }
       goalType,
       minimumGoal,
       maximumGoal,
@@ -113,7 +177,8 @@ const listCampaign = gql`
       endDate,
       startDate,
       isUnlimit,
-      images
+      images,
+      description
     }
   }
 `
