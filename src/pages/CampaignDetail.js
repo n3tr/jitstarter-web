@@ -28,7 +28,7 @@ const Headline = styled.h1`
 `
 const ImageStyle = styled.img`
  height: 400px;
- width: 100%;
+ margin: 0 auto;
  overflow: hidden;
 `
 const CardContainer = styled.div`
@@ -42,6 +42,8 @@ const OwnerStyle = styled.div`
 const ImageContainer = styled.div`
  position: relative;
  background-size: cover;
+ border-radius: 2px;
+ background-color: #292929;
 `
 
 class CampaignDetail extends Component {
@@ -174,7 +176,7 @@ class CampaignDetail extends Component {
               </CardContainer>
             </Row>
             ): null }
-            
+
           </Col>
           <Col span={6}>
             <DetailBox
